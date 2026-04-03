@@ -521,9 +521,154 @@
 .about-content {
   flex: 1;
 }
+
+/* FILTER MENU PREMIUM */
+.work-filter {
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.filter-main {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-btn {
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+  background: var(--ink);
+  color: #fff;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+}
+
+.filter-sub {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.sub-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.sub-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.sub-btn:hover {
+  border-color: var(--accent);
+}
+
+/* ANIMATION */
+.work-card {
+  transition: all 0.4s ease;
+}
+
+.work-card.hide {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.work-card.show {
+  opacity: 1;
+  transform: scale(1);
+} 
  
 </style>
 </head>
+
+<script>
+const mainBtns = document.querySelectorAll('.filter-btn');
+const subMenu = document.getElementById('subMenu');
+const cards = document.querySelectorAll('.work-card');
+
+const subMenus = {
+  comm: [
+    { name: "All", value: "all" },
+    { name: "📊 Planning & Strategy", value: "strategy" },
+    { name: "📚 Knowledge Resources", value: "knowledge" }
+  ],
+  creative: [
+    { name: "All", value: "all" },
+    { name: "📷 Photography", value: "photo" },
+    { name: "🎨 Graphic Design", value: "design" },
+    { name: "✨ Simple Animation", value: "animation" },
+    { name: "🎬 The Moving Lens", value: "video" }
+  ]
+};
+
+mainBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+
+    document.querySelector('.filter-btn.active').classList.remove('active');
+    btn.classList.add('active');
+
+    const group = btn.dataset.group;
+
+    subMenu.innerHTML = '';
+    subMenus[group].forEach((item, index) => {
+      const b = document.createElement('button');
+      b.classList.add('sub-btn');
+      if(index === 0) b.classList.add('active');
+      b.textContent = item.name;
+      b.dataset.filter = item.value;
+      subMenu.appendChild(b);
+    });
+
+    filterCards(group, 'all');
+  });
+});
+
+document.addEventListener('click', function(e) {
+  if(e.target.classList.contains('sub-btn')) {
+
+    document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+
+    const group = document.querySelector('.filter-btn.active').dataset.group;
+    const category = e.target.dataset.filter;
+
+    filterCards(group, category);
+  }
+});
+
+function filterCards(group, category) {
+  cards.forEach(card => {
+
+    const matchGroup = card.dataset.group === group;
+    const matchCategory = category === 'all' || card.dataset.category === category;
+
+    if(matchGroup && matchCategory) {
+      card.classList.remove('hide');
+      card.classList.add('show');
+    } else {
+      card.classList.remove('show');
+      card.classList.add('hide');
+    }
+  });
+}
+
+filterCards('comm', 'all');
+</script>
+ 
 <body>
 
 <!-- NAVIGATION -->
