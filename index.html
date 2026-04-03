@@ -622,106 +622,89 @@
 
   </div>
 </section>
+
+
  
 <!-- WORK -->
 <section id="work" style="background: var(--warm-white);">
+  
   <div class="work-header">
     <div>
       <p class="section-label">My Work</p>
       <p>A curated selection of works that demonstrate my effort in communication strategy, branding, publications, media engagement, and visual storytelling — designed to inform, engage, and inspire action.<p>
     </div>
-    <a href="#" class="btn btn-outline">View All</a>
   </div>
 
-<!-- WORK FILTER MENU -->
-<div class="work-filter">
+  <!-- FILTER MENU -->
+  <div class="work-filter">
 
-  <!-- Main Tabs -->
-  <div class="filter-main">
-    <button class="filter-btn active" data-group="comm">Communications & Brand Work</button>
-    <button class="filter-btn" data-group="creative">Creative Work</button>
+    <!-- MAIN TABS -->
+    <div class="filter-main">
+      <button class="filter-btn active" data-group="comm">Communications & Brand Work</button>
+      <button class="filter-btn" data-group="creative">Creative Work</button>
+    </div>
+
+    <!-- SUB MENU -->
+    <div class="filter-sub" id="subMenu">
+      <button class="sub-btn active" data-filter="all">All</button>
+      <button class="sub-btn" data-filter="strategy">📊 Planning & Strategy</button>
+      <button class="sub-btn" data-filter="knowledge">📚 Knowledge Resources</button>
+    </div>
+
   </div>
 
-  <!-- Sub Menu -->
-  <div class="filter-sub" id="subMenu">
-    <button class="sub-btn active" data-filter="strategy">Planning & Strategy</button>
-    <button class="sub-btn" data-filter="knowledge">Knowledge Resources</button>
-  </div>
-
-</div>
- 
+  <!-- WORK GRID -->
   <div class="work-grid">
 
-    <a href="#" class="work-card">
-      <div class="work-card-thumb">
-        <!-- REPLACE: <img src="project1.jpg" alt="Project Title"> -->
-        <div class="work-card-thumb-placeholder">📄</div>
-      </div>
+    <!-- COMMUNICATIONS -->
+    <a href="#" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📊</div></div>
       <div class="work-card-body">
         <span class="work-tag">Planning & Strategy</span>
         <h3>Annual Communication Plan</h3>
-        <p>Client or organisation name</p>
-        <span class="work-card-link">View PDF →</span>
+        <p>Organisation Name</p>
       </div>
     </a>
 
-    <a href="#" class="work-card">
-      <div class="work-card-thumb">
-        <div class="work-card-thumb-placeholder">📊</div>
-      </div>
-      <div class="work-card-body">
-        <span class="work-tag">Campaign</span>
-        <h3>Campaign Strategy</h3>
-        <p>Client or organisation name</p>
-        <span class="work-card-link">View PDF →</span>
-      </div>
-    </a>
-
-    <a href="#" class="work-card">
-      <div class="work-card-thumb">
-        <div class="work-card-thumb-placeholder">📷</div>
-      </div>
-      <div class="work-card-body">
-        <span class="work-tag">Photography</span>
-        <h3>Documentary Photography</h3>
-        <p>Project description</p>
-        <span class="work-card-link">View Gallery →</span>
-      </div>
-    </a>
-
-    <a href="#" class="work-card">
-      <div class="work-card-thumb">
-        <div class="work-card-thumb-placeholder">🎨</div>
-      </div>
-      <div class="work-card-body">
-        <span class="work-tag">Graphic Design</span>
-        <h3>Annual Report 2024</h3>
-        <p>Client or organisation name</p>
-        <span class="work-card-link">View PDF →</span>
-      </div>
-    </a>
-
-    <a href="#" class="work-card">
-      <div class="work-card-thumb">
-        <div class="work-card-thumb-placeholder">🎬</div>
-      </div>
-      <div class="work-card-body">
-        <span class="work-tag">Video & Motion</span>
-        <h3>Brand Film</h3>
-        <p>Client or organisation name</p>
-        <span class="work-card-link">Watch Film →</span>
-      </div>
-    </a>
-
-    <a href="#" class="work-card">
-      <div class="work-card-thumb">
-        <div class="work-card-thumb-placeholder">📰</div>
-      </div>
+    <a href="#" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📚</div></div>
       <div class="work-card-body">
         <span class="work-tag">Knowledge Resources</span>
         <h3>Newsletter — Issue 01</h3>
-        <p>Client or organisation name</p>
-        <span class="work-card-link">View PDF →</span>
+        <p>Organisation Name</p>
+      </div>
+    </a>
+
+    <!-- CREATIVE -->
+    <a href="#" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📷</div></div>
+      <div class="work-card-body">
+        <span class="work-tag">Photography</span>
+        <h3>Documentary Photography</h3>
+      </div>
+    </a>
+
+    <a href="#" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">🎨</div></div>
+      <div class="work-card-body">
+        <span class="work-tag">Graphic Design</span>
+        <h3>Annual Report Design</h3>
+      </div>
+    </a>
+
+    <a href="#" class="work-card" data-group="creative" data-category="animation">
+      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">✨</div></div>
+      <div class="work-card-body">
+        <span class="work-tag">Simple Animation</span>
+        <h3>Logo Animation</h3>
+      </div>
+    </a>
+
+    <a href="#" class="work-card" data-group="creative" data-category="video">
+      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">🎬</div></div>
+      <div class="work-card-body">
+        <span class="work-tag">The Moving Lens</span>
+        <h3>Brand Film</h3>
       </div>
     </a>
 
