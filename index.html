@@ -602,16 +602,14 @@ const cards = document.querySelectorAll('.work-card');
 
 const subMenus = {
   comm: [
-    { name: "All", value: "all" },
-    { name: "📊 Planning & Strategy", value: "strategy" },
-    { name: "📚 Knowledge Resources", value: "knowledge" }
+    { name: "Planning & Strategy", value: "strategy" },
+    { name: "Knowledge Resources", value: "knowledge" }
   ],
   creative: [
-    { name: "All", value: "all" },
-    { name: "📷 Photography", value: "photo" },
-    { name: "🎨 Graphic Design", value: "design" },
-    { name: "✨ Simple Animation", value: "animation" },
-    { name: "🎬 The Moving Lens", value: "video" }
+    { name: "Photography", value: "photo" },
+    { name: "Graphic Design", value: "design" },
+    { name: "Simple Animation", value: "animation" },
+    { name: "The Moving Lens", value: "video" }
   ]
 };
 
@@ -624,6 +622,12 @@ mainBtns.forEach(btn => {
     const group = btn.dataset.group;
 
     subMenu.innerHTML = '';
+
+    if(group === 'all') {
+      filterCards('all', 'all');
+      return;
+    }
+
     subMenus[group].forEach((item, index) => {
       const b = document.createElement('button');
       b.classList.add('sub-btn');
@@ -633,7 +637,7 @@ mainBtns.forEach(btn => {
       subMenu.appendChild(b);
     });
 
-    filterCards(group, 'all');
+    filterCards(group, subMenus[group][0].value);
   });
 });
 
@@ -653,7 +657,7 @@ document.addEventListener('click', function(e) {
 function filterCards(group, category) {
   cards.forEach(card => {
 
-    const matchGroup = card.dataset.group === group;
+    const matchGroup = group === 'all' || card.dataset.group === group;
     const matchCategory = category === 'all' || card.dataset.category === category;
 
     if(matchGroup && matchCategory) {
@@ -666,7 +670,7 @@ function filterCards(group, category) {
   });
 }
 
-filterCards('comm', 'all');
+filterCards('all', 'all');
 </script>
  
 <body>
@@ -768,32 +772,29 @@ filterCards('comm', 'all');
   </div>
 </section>
 
-
- 
 <!-- WORK -->
 <section id="work" style="background: var(--warm-white);">
   
   <div class="work-header">
     <div>
       <p class="section-label">My Work</p>
-      <p>A curated selection of works that demonstrate my effort in communication strategy, branding, publications, media engagement, and visual storytelling — designed to inform, engage, and inspire action.<p>
+      <h2>A curated selection of work</h2>
     </div>
   </div>
 
   <!-- FILTER MENU -->
   <div class="work-filter">
 
-    <!-- MAIN TABS -->
+    <!-- TOP ROW (3 BUTTONS) -->
     <div class="filter-main">
-      <button class="filter-btn active" data-group="comm">Communications & Brand Work</button>
+      <button class="filter-btn active" data-group="all">All Work</button>
+      <button class="filter-btn" data-group="comm">Communications & Brand Work</button>
       <button class="filter-btn" data-group="creative">Creative Work</button>
     </div>
 
     <!-- SUB MENU -->
     <div class="filter-sub" id="subMenu">
-      <button class="sub-btn active" data-filter="all">All</button>
-      <button class="sub-btn" data-filter="strategy">📊 Planning & Strategy</button>
-      <button class="sub-btn" data-filter="knowledge">📚 Knowledge Resources</button>
+      <!-- dynamic -->
     </div>
 
   </div>
@@ -807,7 +808,6 @@ filterCards('comm', 'all');
       <div class="work-card-body">
         <span class="work-tag">Planning & Strategy</span>
         <h3>Annual Communication Plan</h3>
-        <p>Organisation Name</p>
       </div>
     </a>
 
@@ -815,8 +815,7 @@ filterCards('comm', 'all');
       <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📚</div></div>
       <div class="work-card-body">
         <span class="work-tag">Knowledge Resources</span>
-        <h3>Newsletter — Issue 01</h3>
-        <p>Organisation Name</p>
+        <h3>Newsletter</h3>
       </div>
     </a>
 
@@ -833,7 +832,7 @@ filterCards('comm', 'all');
       <div class="work-card-thumb"><div class="work-card-thumb-placeholder">🎨</div></div>
       <div class="work-card-body">
         <span class="work-tag">Graphic Design</span>
-        <h3>Annual Report Design</h3>
+        <h3>Annual Report</h3>
       </div>
     </a>
 
@@ -855,6 +854,7 @@ filterCards('comm', 'all');
 
   </div>
 </section>
+ 
 
 <!-- CTA BANNER -->
 <section class="cta-banner" id="contact">
