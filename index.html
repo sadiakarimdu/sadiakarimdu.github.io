@@ -602,81 +602,90 @@
 </head>
 
 <script>
-const mainBtns = document.querySelectorAll('.filter-btn');
-const subMenu = document.getElementById('subMenu');
-const cards = document.querySelectorAll('.work-card');
+  const categoryDescriptions = {
+    strategy: "Designing and implementing strategic communication initiatives that translate complex ideas into measurable, impactful results.",
+    knowledge: "Contributing to high-quality, clear, and consistent publications by editing, coordinating, and managing content from draft to final production.",
+    photo: "Documentary and editorial photography that captures moments of resilience, joy, and transformation.",
+    design: "Publications, annual reports, campaigns, infographics, and branded materials that inform and inspire action.",
+    animation: "Logo animations and motion graphics that bring brand identities to life.",
+    video: "Short films and documentary video production using Adobe Premiere Pro and DaVinci Resolve."
+  };
 
-const subMenus = {
-  comm: [
-    { name: "Planning & Strategy", value: "strategy" },
-    { name: "Knowledge Resources", value: "knowledge" }
-  ],
-  creative: [
-    { name: "Photography", value: "photo" },
-    { name: "Graphic Design", value: "design" },
-    { name: "Simple Animation", value: "animation" },
-    { name: "The Moving Lens", value: "video" }
-  ]
-};
+  const subMenus = {
+    comm: [
+      { name: "Planning & Strategy", value: "strategy" },
+      { name: "Knowledge Resources", value: "knowledge" }
+    ],
+    creative: [
+      { name: "Photography", value: "photo" },
+      { name: "Graphic Design", value: "design" },
+      { name: "Simple Animation", value: "animation" },
+      { name: "The Moving Lens", value: "video" }
+    ]
+  };
 
-mainBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
+  function filterCards(group, category) {
+    const cards = document.querySelectorAll('.work-card');
+    cards.forEach(card => {
+      const matchGroup = group === 'all' || card.dataset.group === group;
+      const matchCategory = category === 'all' || card.dataset.category === category;
+      if (matchGroup && matchCategory) {
+        card.classList.remove('hide');
+        card.classList.add('show');
+      } else {
+        card.classList.remove('show');
+        card.classList.add('hide');
+      }
+    });
+    const desc = document.getElementById('categoryDesc');
+    desc.textContent = category !== 'all' ? (categoryDescriptions[category] || '') : '';
+  }
 
-    document.querySelector('.filter-btn.active').classList.remove('active');
-    btn.classList.add('active');
-
-    const group = btn.dataset.group;
-
+  function buildSubMenu(group, defaultCategory) {
+    const subMenu = document.getElementById('subMenu');
     subMenu.innerHTML = '';
-
-    if(group === 'all') {
-      filterCards('all', 'all');
-      return;
-    }
-
-    subMenus[group].forEach((item, index) => {
+    if (!subMenus[group]) return;
+    subMenus[group].forEach((item, i) => {
       const b = document.createElement('button');
       b.classList.add('sub-btn');
-      if(index === 0) b.classList.add('active');
+      if (i === 0) b.classList.add('active');
       b.textContent = item.name;
       b.dataset.filter = item.value;
       subMenu.appendChild(b);
     });
-
-    filterCards(group, subMenus[group][0].value);
-  });
-});
-
-document.addEventListener('click', function(e) {
-  if(e.target.classList.contains('sub-btn')) {
-
-    document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-
-    const group = document.querySelector('.filter-btn.active').dataset.group;
-    const category = e.target.dataset.filter;
-
-    filterCards(group, category);
   }
-});
 
-function filterCards(group, category) {
-  cards.forEach(card => {
+  document.addEventListener('DOMContentLoaded', function () {
+    const mainBtns = document.querySelectorAll('.filter-btn');
 
-    const matchGroup = group === 'all' || card.dataset.group === group;
-    const matchCategory = category === 'all' || card.dataset.category === category;
+    mainBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.filter-btn.active').classList.remove('active');
+        btn.classList.add('active');
+        const group = btn.dataset.group;
+        buildSubMenu(group, null);
+        if (group === 'all') {
+          filterCards('all', 'all');
+        } else {
+          const firstCat = subMenus[group][0].value;
+          filterCards(group, firstCat);
+        }
+      });
+    });
 
-    if(matchGroup && matchCategory) {
-      card.classList.remove('hide');
-      card.classList.add('show');
-    } else {
-      card.classList.remove('show');
-      card.classList.add('hide');
-    }
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('sub-btn')) {
+        document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        const group = document.querySelector('.filter-btn.active').dataset.group;
+        filterCards(group, e.target.dataset.filter);
+      }
+    });
+
+    // Default: Communications & Brand Work > Planning & Strategy
+    buildSubMenu('comm', 'strategy');
+    filterCards('comm', 'strategy');
   });
-}
-
-filterCards('all', 'all');
 </script>
  
 <body>
@@ -780,87 +789,199 @@ filterCards('all', 'all');
 
 <!-- WORK -->
 <section id="work" style="background: var(--warm-white);">
-  
+
   <div class="work-header">
     <div>
       <p class="section-label">My Work</p>
       <h2>A curated selection of work</h2>
+      <p style="font-size: 1rem; color: var(--ink-soft); line-height: 1.75; max-width: 60ch; margin-top: 1rem;">
+        A curated selection of works that demonstrate my effort in communication strategy, branding, publications, media engagement, and visual storytelling — designed to inform, engage, and inspire action.
+      </p>
     </div>
   </div>
 
-  <!-- FILTER MENU -->
+  <!-- FILTER SYSTEM -->
   <div class="work-filter">
 
-    <!-- TOP ROW (3 BUTTONS) -->
-    <div class="filter-main">
-      <button class="filter-btn active" data-group="all">All Work</button>
-      <button class="filter-btn" data-group="comm">Communications & Brand Work</button>
+    <!-- MAIN TABS -->
+    <div class="filter-main" id="mainTabs">
+      <button class="filter-btn active" data-group="comm">Communications &amp; Brand Work</button>
       <button class="filter-btn" data-group="creative">Creative Work</button>
+      <button class="filter-btn" data-group="all">All Work</button>
     </div>
 
     <!-- SUB MENU -->
-    <div class="filter-sub" id="subMenu">
-      <!-- dynamic -->
-    </div>
+    <div class="filter-sub" id="subMenu"></div>
+
+    <!-- CATEGORY DESCRIPTION -->
+    <p id="categoryDesc" style="font-size: 1rem; color: var(--ink-soft); line-height: 1.75; max-width: 60ch; margin: 1.5rem 0 2rem;"></p>
 
   </div>
 
   <!-- WORK GRID -->
-  <div class="work-grid">
+  <div class="work-grid" id="workGrid" style="max-width: 1200px; margin: 0 auto;">
 
-    <!-- COMMUNICATIONS -->
+    <!-- COMM > PLANNING & STRATEGY -->
     <a href="#" class="work-card" data-group="comm" data-category="strategy">
-      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📊</div></div>
-      <div class="work-card-body">
-        <span class="work-tag">Planning & Strategy</span>
-        <h3>Annual Communication Plan</h3>
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Annual Communication Plan</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
       </div>
     </a>
 
+    <a href="#" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Campaign Strategy</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="#" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Communication Strategy</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="#" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Content Strategy</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="#" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Media Strategy</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <!-- COMM > KNOWLEDGE RESOURCES -->
     <a href="#" class="work-card" data-group="comm" data-category="knowledge">
-      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📚</div></div>
-      <div class="work-card-body">
-        <span class="work-tag">Knowledge Resources</span>
-        <h3>Newsletter</h3>
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Newsletter</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <!-- CREATIVE -->
+    <!-- CREATIVE > PHOTOGRAPHY -->
     <a href="#" class="work-card" data-group="creative" data-category="photo">
-      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">📷</div></div>
-      <div class="work-card-body">
-        <span class="work-tag">Photography</span>
-        <h3>Documentary Photography</h3>
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="44" height="36" viewBox="0 0 44 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="5" width="42" height="29" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <circle cx="22" cy="19" r="8" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <circle cx="22" cy="19" r="4" stroke="#b87333" stroke-width="1.2" fill="none"/>
+          <rect x="14" y="1" width="16" height="6" rx="2" stroke="#b87333" stroke-width="1.2" fill="none"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Photography</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Documentary Photography</h3>
       </div>
     </a>
 
+    <!-- CREATIVE > GRAPHIC DESIGN -->
     <a href="#" class="work-card" data-group="creative" data-category="design">
-      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">🎨</div></div>
-      <div class="work-card-body">
-        <span class="work-tag">Graphic Design</span>
-        <h3>Annual Report</h3>
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
+          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Annual Report</h3>
       </div>
     </a>
 
+    <!-- CREATIVE > ANIMATION -->
     <a href="#" class="work-card" data-group="creative" data-category="animation">
-      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">✨</div></div>
-      <div class="work-card-body">
-        <span class="work-tag">Simple Animation</span>
-        <h3>Logo Animation</h3>
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <polygon points="16,13 30,20 16,27" stroke="#b87333" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Simple Animation</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Logo Animation</h3>
       </div>
     </a>
 
-    <a href="#" class="work-card" data-group="creative" data-category="video">
-      <div class="work-card-thumb"><div class="work-card-thumb-placeholder">🎬</div></div>
-      <div class="work-card-body">
-        <span class="work-tag">The Moving Lens</span>
-        <h3>Brand Film</h3>
+    <!-- CREATIVE > VIDEO -->
+    <a href="https://youtube.com" target="_blank" class="work-card" data-group="creative" data-category="video">
+      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="#b87333" stroke-width="1.5" fill="none"/>
+          <polygon points="16,13 30,20 16,27" stroke="#b87333" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
+        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">The Moving Lens</span>
+        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Brand Film</h3>
+        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Watch on YouTube →</span>
       </div>
     </a>
 
   </div>
-</section>
- 
+</section> 
 
 <!-- CTA BANNER -->
 <section class="cta-banner" id="contact">
