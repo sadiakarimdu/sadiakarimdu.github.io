@@ -598,6 +598,32 @@
 </style>
 </head>
 
+<script>
+  function showContact() {
+    const contactSection = document.getElementById('contact');
+    const banner = document.getElementById('contact-banner');
+    contactSection.style.display = 'block';
+    banner.style.display = 'none';
+    setTimeout(() => {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  }
+
+  // Also hide contact and show banner when navigating away
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    if (!link.hasAttribute('onclick')) {
+      link.addEventListener('click', () => {
+        const contact = document.getElementById('contact');
+        const banner = document.getElementById('contact-banner');
+        if (contact) contact.style.display = 'none';
+        if (banner) banner.style.display = 'block';
+      });
+    }
+  });
+</script>
+
+
+ 
 <body>
 
 <!-- NAVIGATION -->
@@ -606,7 +632,7 @@
   <ul class="nav-links">
     <li><a href="#about">About Me</a></li>
     <li><a href="#work">Work</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" onclick="showContact()">Contact</a></li>
   </ul>
 </nav>
 
@@ -1568,6 +1594,48 @@
   <a href="mailto:mssadiakarim@hotmail.com" class="btn btn-light">Get in Touch</a>
 </section>
 
+<!-- CTA BANNER -->
+<section class="cta-banner" id="contact-banner">
+  <h2>Let's work together</h2>
+  <p>Looking for someone who can bring your vision to life? I'd love to hear about your project.</p>
+  <a href="#contact" class="btn btn-light" onclick="showContact()">Get in Touch</a>
+</section>
+
+<!-- CONTACT PAGE -->
+<section id="contact" style="display:none; background: var(--warm-white); padding: 6rem 4rem; min-height: 100vh;">
+  <div style="max-width: 700px; margin: 0 auto;">
+
+    <p class="section-label">Contact</p>
+    <h2 style="font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; color: var(--ink); margin-bottom: 1.5rem; max-width: 100%;">Let's work together</h2>
+    <p style="font-size: 1rem; color: var(--ink-soft); line-height: 1.8; max-width: 55ch; margin-bottom: 4rem;">
+      Interested in working together to elevate your brand and message? Let's turn ideas, programmes, and initiatives into stories that inform, inspire, and create lasting impact.
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 2.5rem;">
+
+      <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <p style="font-family: var(--serif); font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;">Email</p>
+        <a href="mailto:mssadiakarim@hotmail.com" style="color: var(--accent); text-decoration: none; font-size: 1rem;">mssadiakarim@hotmail.com</a>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <p style="font-family: var(--serif); font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;">Location</p>
+        <p style="color: var(--ink-mid); font-size: 1rem;">Walsall, United Kingdom</p>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <p style="font-family: var(--serif); font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;">Connect</p>
+        <a href="https://www.linkedin.com/in/sadia-karim/" target="_blank" style="color: var(--ink-mid); text-decoration: none; font-size: 1rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-mid)'">LinkedIn ↗</a>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+ 
+
+ 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
