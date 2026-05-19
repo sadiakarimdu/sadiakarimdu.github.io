@@ -345,7 +345,7 @@
  
   /* CTA BANNER */
   .cta-banner {
-    background: var(--ink);
+    background: #2d241c;
     color: var(--warm-white);
     text-align: center;
     padding: 5rem 4rem;
@@ -365,15 +365,15 @@
   }
 
   .btn-light {
-    background: transparent;
+    background: #c45a3c;
     color: var(--warm-white);
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid #c45a3c;
   }
 
   .btn-light:hover {
-    background: var(--warm-white);
+    background: #d97c61;
     color: var(--ink);
-    border-color: var(--warm-white);
+    border-color: #d97c61;
   }
 
   /* FOOTER */
@@ -475,7 +475,7 @@
 /* ABOUT SECTION FIX */
 .about-inner {
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -588,105 +588,41 @@
 }
 
 .work-card.hide {
-  opacity: 0;
-  transform: scale(0.95);
-  pointer-events: none;
+  display: none;
 }
 
 .work-card.show {
-  opacity: 1;
-  transform: scale(1);
-} 
+  display: block;
+}
  
 </style>
 </head>
 
 <script>
-  const categoryDescriptions = {
-    strategy: "Designing and implementing strategic communication initiatives that translate complex ideas into measurable, impactful results.",
-    knowledge: "Contributing to high-quality, clear, and consistent publications by editing, coordinating, and managing content from draft to final production.",
-    photo: "Documentary and editorial photography that captures moments of resilience, joy, and transformation.",
-    design: "Publications, annual reports, campaigns, infographics, and branded materials that inform and inspire action.",
-    animation: "Logo animations and motion graphics that bring brand identities to life.",
-    video: "Short films and documentary video production using Adobe Premiere Pro and DaVinci Resolve."
-  };
-
-  const subMenus = {
-    comm: [
-      { name: "Planning & Strategy", value: "strategy" },
-      { name: "Knowledge Resources", value: "knowledge" }
-    ],
-    creative: [
-      { name: "Photography", value: "photo" },
-      { name: "Graphic Design", value: "design" },
-      { name: "Simple Animation", value: "animation" },
-      { name: "The Moving Lens", value: "video" }
-    ]
-  };
-
-  function filterCards(group, category) {
-    const cards = document.querySelectorAll('.work-card');
-    cards.forEach(card => {
-      const matchGroup = group === 'all' || card.dataset.group === group;
-      const matchCategory = category === 'all' || card.dataset.category === category;
-      if (matchGroup && matchCategory) {
-        card.classList.remove('hide');
-        card.classList.add('show');
-      } else {
-        card.classList.remove('show');
-        card.classList.add('hide');
-      }
-    });
-    const desc = document.getElementById('categoryDesc');
-    desc.textContent = category !== 'all' ? (categoryDescriptions[category] || '') : '';
+  function showContact() {
+    const contactSection = document.getElementById('contact');
+    const banner = document.getElementById('contact-banner');
+    contactSection.style.display = 'block';
+    banner.style.display = 'none';
+    setTimeout(() => {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
   }
 
-  function buildSubMenu(group, defaultCategory) {
-    const subMenu = document.getElementById('subMenu');
-    subMenu.innerHTML = '';
-    if (!subMenus[group]) return;
-    subMenus[group].forEach((item, i) => {
-      const b = document.createElement('button');
-      b.classList.add('sub-btn');
-      if (i === 0) b.classList.add('active');
-      b.textContent = item.name;
-      b.dataset.filter = item.value;
-      subMenu.appendChild(b);
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    const mainBtns = document.querySelectorAll('.filter-btn');
-
-    mainBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelector('.filter-btn.active').classList.remove('active');
-        btn.classList.add('active');
-        const group = btn.dataset.group;
-        buildSubMenu(group, null);
-        if (group === 'all') {
-          filterCards('all', 'all');
-        } else {
-          const firstCat = subMenus[group][0].value;
-          filterCards(group, firstCat);
-        }
+  // Also hide contact and show banner when navigating away
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    if (!link.hasAttribute('onclick')) {
+      link.addEventListener('click', () => {
+        const contact = document.getElementById('contact');
+        const banner = document.getElementById('contact-banner');
+        if (contact) contact.style.display = 'none';
+        if (banner) banner.style.display = 'block';
       });
-    });
-
-    document.addEventListener('click', function (e) {
-      if (e.target.classList.contains('sub-btn')) {
-        document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        const group = document.querySelector('.filter-btn.active').dataset.group;
-        filterCards(group, e.target.dataset.filter);
-      }
-    });
-
-    // Default: Communications & Brand Work > Planning & Strategy
-    buildSubMenu('comm', 'strategy');
-    filterCards('comm', 'strategy');
+    }
   });
 </script>
+
+
  
 <body>
 
@@ -696,7 +632,7 @@
   <ul class="nav-links">
     <li><a href="#about">About Me</a></li>
     <li><a href="#work">Work</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" onclick="showContact()">Contact</a></li>
   </ul>
 </nav>
 
@@ -725,23 +661,26 @@
 
 <!-- ABOUT ME -->
 <section class="about" id="about">
-  <div class="about-inner">
- 
-    <div class="about-image">
-      <!-- Make sure profile.jpg is in the same folder as index.html -->
-      <img src="profile.jpg" alt="Sadia Karim">
-    </div>
- 
-    <div class="about-content">
-      <p class="section-label">About Me</p>
-      <p class="about-tagline">Strategic communications and storytelling for organisations that create change.</p>
-      <div class="about-body">
-        <p>I'm Sadia Karim — a Strategic Brand & Communications professional with over 13 years of experience shaping narratives, strengthening brand identities, and leading creative content across global development and corporate environments.</p>
-        <p>Throughout my career, I've led brand strategy, digital engagement, and multichannel content creation, partnering with teams to build campaigns, visual stories, and communication systems that drive clarity and impact. With a background spanning brand governance, creative direction, photography, video editing, and digital optimisation, I bring both analytical thinking and artistic intuition to every project.</p>
-        <p>Originally from Bangladesh and now based in the UK, I'm focused on applying my experience to brands that value purpose, creativity, and meaningful audience engagement. Whether I'm developing a brand narrative, designing visual content, or shaping a digital strategy, my goal is always the same: to create work that feels intentional, human-centred, and memorable.</p>
+  <div style="max-width: 1200px; margin: 0 auto;">
+
+    <div style="align-items: start;">
+
+      <div style="overflow: hidden;">
+        <img src="profile.jpg" alt="Sadia Karim" style="width: 50%; height: 100%; object-fit: cover; object-position: center; display: block; float:left; margin: 0px 20px 20px 0px;">
+
+        <div style="font-size: 0.97rem; color: var(--ink-mid); line-height: 1.85;">
+         <p class="section-label" style="margin-bottom:1rem; padding-bottom:0rem">About Me</p>
+         <p style="font-size: 1.05rem; font-weight: bold; color: var(--ink-mid); line-height: 1.75; margin-bottom: 1rem;">Strategic communications and storytelling for organisations that create change.</p>
+         <p style="margin-bottom: 1rem;">I'm Sadia Karim — a Strategic Brand &amp; Communications professional with over 13 years of experience shaping narratives, strengthening brand identities, and leading creative content across global development and corporate environments.</p>
+         <p style="margin-bottom: 1rem;">Throughout my career, I've led brand strategy, digital engagement, and multichannel content creation, partnering with teams to build campaigns, visual stories, and communication systems that drive clarity and impact. With a background spanning brand governance, creative direction, photography, video editing, and digital optimisation, I bring both analytical thinking and artistic intuition to every project.</p>
+         <p>Originally from Bangladesh and now based in the UK, I'm focused on applying my experience to brands that value purpose, creativity, and meaningful audience engagement. Whether I'm developing a brand narrative, designing visual content, or shaping a digital strategy, my goal is always the same: to create work that feels intentional, human-centred, and memorable.</p>
+       </div>
       </div>
+
     </div>
- 
+
+    
+
   </div>
 </section>
 
@@ -787,209 +726,909 @@
   </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
+
 <!-- WORK -->
 <section id="work" style="background: var(--warm-white);">
 
   <div class="work-header">
     <div>
       <p class="section-label">My Work</p>
-      <h2>A curated selection of work</h2>
       <p style="font-size: 1rem; color: var(--ink-soft); line-height: 1.75; max-width: 60ch; margin-top: 1rem;">
         A curated selection of works that demonstrate my effort in communication strategy, branding, publications, media engagement, and visual storytelling — designed to inform, engage, and inspire action.
       </p>
     </div>
   </div>
 
-  <!-- FILTER SYSTEM -->
   <div class="work-filter">
-
-    <!-- MAIN TABS -->
     <div class="filter-main" id="mainTabs">
       <button class="filter-btn active" data-group="comm">Communications &amp; Brand Work</button>
       <button class="filter-btn" data-group="creative">Creative Work</button>
       <button class="filter-btn" data-group="all">All Work</button>
     </div>
-
-    <!-- SUB MENU -->
     <div class="filter-sub" id="subMenu"></div>
-
-    <!-- CATEGORY DESCRIPTION -->
     <p id="categoryDesc" style="font-size: 1rem; color: var(--ink-soft); line-height: 1.75; max-width: 60ch; margin: 1.5rem 0 2rem;"></p>
-
   </div>
 
-  <!-- WORK GRID -->
-  <div class="work-grid" id="workGrid" style="max-width: 1200px; margin: 0 auto;">
+  <div id="workGrid" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;">
 
-    <!-- COMM > PLANNING & STRATEGY -->
-    <a href="#" class="work-card" data-group="comm" data-category="strategy">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <!-- ── COMM > PLANNING & STRATEGY ── -->
+    <a href="Work/Communication/1. Planning and Strategies/Annual Communication Plan-De-identified version.pdf" target="_blank" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/1. Planning and Strategies/Annual Communication Plan-De-identified version.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Annual Communication Plan</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Annual Communication Plan</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <a href="#" class="work-card" data-group="comm" data-category="strategy">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <a href="Work/Communication/1. Planning and Strategies/Campaign Strategy.pdf" target="_blank" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/1. Planning and Strategies/Campaign Strategy.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Campaign Strategy</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Campaign Strategy</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <a href="#" class="work-card" data-group="comm" data-category="strategy">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <a href="Work/Communication/1. Planning and Strategies/Communication Strategy-De-identified version.pdf" target="_blank" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/1. Planning and Strategies/Communication Strategy-De-identified version.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Communication Strategy</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Communication Strategy</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <a href="#" class="work-card" data-group="comm" data-category="strategy">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <a href="Work/Communication/1. Planning and Strategies/Content Strategy.pdf" target="_blank" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/1. Planning and Strategies/Content Strategy.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Content Strategy</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Content Strategy</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <a href="#" class="work-card" data-group="comm" data-category="strategy">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <a href="Work/Communication/1. Planning and Strategies/Media Strategy.pdf" target="_blank" class="work-card" data-group="comm" data-category="strategy">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/1. Planning and Strategies/Media Strategy.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Planning &amp; Strategy</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Media Strategy</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Planning &amp; Strategy</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Media Strategy</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <!-- COMM > KNOWLEDGE RESOURCES -->
-    <a href="#" class="work-card" data-group="comm" data-category="knowledge">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <!-- ── COMM > KNOWLEDGE RESOURCES ── -->
+    <a href="Work/Communication/2. Knowledge Resources/Annual Report 2023_Educo Bangladesh.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Annual Report 2023_Educo Bangladesh.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Knowledge Resources</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Newsletter</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Open PDF →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Annual Report 2023 — Educo Bangladesh</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <!-- CREATIVE > PHOTOGRAPHY -->
-    <a href="#" class="work-card" data-group="creative" data-category="photo">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="44" height="36" viewBox="0 0 44 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="5" width="42" height="29" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <circle cx="22" cy="19" r="8" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <circle cx="22" cy="19" r="4" stroke="#b87333" stroke-width="1.2" fill="none"/>
-          <rect x="14" y="1" width="16" height="6" rx="2" stroke="#b87333" stroke-width="1.2" fill="none"/>
-        </svg>
+    <a href="Work/Communication/2. Knowledge Resources/Annual Report 2024_Bangladesh.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Annual Report 2024_Bangladesh.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Photography</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Documentary Photography</h3>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Annual Report 2024 — Bangladesh</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <!-- CREATIVE > GRAPHIC DESIGN -->
-    <a href="#" class="work-card" data-group="creative" data-category="design">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="36" height="44" rx="3" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <line x1="10" y1="14" x2="30" y2="14" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="21" x2="30" y2="21" stroke="#b87333" stroke-width="1.2"/>
-          <line x1="10" y1="28" x2="22" y2="28" stroke="#b87333" stroke-width="1.2"/>
-        </svg>
+    <a href="Work/Communication/2. Knowledge Resources/Booklet-Ecotex.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Booklet-Ecotex.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Graphic Design</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Annual Report</h3>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Booklet — Ecotex</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <!-- CREATIVE > ANIMATION -->
-    <a href="#" class="work-card" data-group="creative" data-category="animation">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="20" r="18" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <polygon points="16,13 30,20 16,27" stroke="#b87333" stroke-width="1.5" fill="none"/>
-        </svg>
+    <a href="Work/Communication/2. Knowledge Resources/Brochure_ECHOTEX.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Brochure_ECHOTEX.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">Simple Animation</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Logo Animation</h3>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Brochure — ECHOTEX</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
       </div>
     </a>
 
-    <!-- CREATIVE > VIDEO -->
-    <a href="https://youtube.com" target="_blank" class="work-card" data-group="creative" data-category="video">
-      <div class="work-card-thumb" style="aspect-ratio: 4/3; background: var(--accent-light); display: flex; align-items: center; justify-content: center;">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="20" r="18" stroke="#b87333" stroke-width="1.5" fill="none"/>
-          <polygon points="16,13 30,20 16,27" stroke="#b87333" stroke-width="1.5" fill="none"/>
-        </svg>
+    <a href="Work/Communication/2. Knowledge Resources/Educo Bangladesh_Case Story Booklet_2025.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Educo Bangladesh_Case Story Booklet_2025.pdf" style="width:100%; display:block;"></canvas>
       </div>
-      <div class="work-card-body" style="padding: 1.25rem 1.5rem;">
-        <span class="work-tag" style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);">The Moving Lens</span>
-        <h3 style="font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-top: 0.4rem;">Brand Film</h3>
-        <span style="font-size: 0.78rem; color: var(--accent); display: block; margin-top: 0.5rem;">Watch on YouTube →</span>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Case Story Booklet 2025</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/Educo Infograph.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Educo Infograph.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo Infograph</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/KOICA PDF.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/KOICA PDF.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">KOICA</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/LIFT Project V13.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/LIFT Project V13.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">LIFT Project</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/migrants voice 3rd issue 2014.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/migrants voice 3rd issue 2014.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Migrants Voice — 3rd Issue 2014</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/Migrant_s Voice 4th issue 2015.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/Migrant_s Voice 4th issue 2015.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Migrants Voice — 4th Issue 2015</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/migration brochure_new.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/migration brochure_new.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Migration Brochure</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2. Knowledge Resources/pamphlet5.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2. Knowledge Resources/pamphlet5.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Pamphlet</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+<a href="Work/Communication/2.%20Knowledge%20Resources/Desk%20calendar_06.11.2023.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Desk%20calendar_06.11.2023.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Desk Calendar 2023</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Educo%20Bangladesh_Case%20Story%20Booklet_2025.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Educo%20Bangladesh_Case%20Story%20Booklet_2025.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Case Story Booklet 2025</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Educo%20Desk%20Calendar%202025.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Educo%20Desk%20Calendar%202025.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo Desk Calendar 2025</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/EDUCO%20Notebook%202025.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/EDUCO%20Notebook%202025.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">EDUCO Notebook 2025</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Educo%20Planner_2025.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Educo%20Planner_2025.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo Planner 2025</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/EDUCO%20Slip%20Pad.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/EDUCO%20Slip%20Pad.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">EDUCO Slip Pad</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Educo_25%20Yrs.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Educo_25%20Yrs.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo 25 Years</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Gender%20brochure%20final.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Gender%20brochure%20final.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Gender Brochure</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Leaflet_Bangla%2016%20Days%202019.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Leaflet_Bangla%2016%20Days%202019.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Leaflet — Bangla 16 Days 2019</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Leaflet_Bangla_IWD2020.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Leaflet_Bangla_IWD2020.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Leaflet — Bangla IWD 2020</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/leaflet_Bng_IWD%202019.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/leaflet_Bng_IWD%202019.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Leaflet — Bangla IWD 2019</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/leaflet_EMB_%2023%20Oct%2019.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/leaflet_EMB_%2023%20Oct%2019.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Leaflet — EMB 23 Oct 2019</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Leaflet_English%2016%20Days%202019.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Leaflet_English%2016%20Days%202019.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Leaflet — English 16 Days 2019</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Leaflet_English_IWD2020.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Leaflet_English_IWD2020.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Leaflet — English IWD 2020</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Module-1%20Govt%20officials.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Module-1%20Govt%20officials.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Module 1 — Govt Officials</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Monthly%20Planner_06.11.2023.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Monthly%20Planner_06.11.2023.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Monthly Planner 2023</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Notebook_06.11.2023.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Notebook_06.11.2023.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Notebook 2023</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/ODHIKAR.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/ODHIKAR.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">ODHIKAR</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Communication/2.%20Knowledge%20Resources/Slip%20pad_06.11.2023.pdf" target="_blank" class="work-card" data-group="comm" data-category="knowledge">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Communication/2.%20Knowledge%20Resources/Slip%20pad_06.11.2023.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Knowledge Resources</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Slip Pad 2023</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+   
+    <!-- ── CREATIVE > PHOTOGRAPHY ── -->
+    <a href="Work/Creative work/1. Photography Portfolio/DSC00857.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC00857.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC00857</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC01219.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC01219.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC01219</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC02980.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC02980.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC02980</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC03687.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC03687.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC03687</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC03839.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC03839.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC03839</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC03934.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC03934.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC03934</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC03956.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC03956.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC03956</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC03971.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC03971.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC03971</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC03995.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC03995.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC03995</h3>
+      </div>
+    </a>
+
+    <a href="Work/Creative work/1. Photography Portfolio/DSC04014.jpg" target="_blank" class="work-card" data-group="creative" data-category="photo">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="Work/Creative work/1. Photography Portfolio/DSC04014.jpg" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Photography</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DSC04014</h3>
+      </div>
+    </a>
+
+  <!-- ── CREATIVE > GRAPHIC DESIGN (Publication) ── -->
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/AYE-one%20pager.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/AYE-one%20pager.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">AYE One Pager</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Child%20Labour%20Elimination-one%20pager.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Child%20Labour%20Elimination-one%20pager.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Child Labour Elimination</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Climate%20Change-one%20pager.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Climate%20Change-one%20pager.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Climate Change One Pager</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/DevTalk%202022-Dec.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/DevTalk%202022-Dec.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">DevTalk — Dec 2022</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Educo-one%20pager.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Educo-one%20pager.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo One Pager</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/GBV%20prevention%20project%20brief.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/GBV%20prevention%20project%20brief.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">GBV Prevention Project Brief</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/GCD%202018.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/GCD%202018.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">GCD 2018</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens-%20Aug%2018.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens-%20Aug%2018.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Gender Lens — Aug 2018</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens_April%2018.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens_April%2018.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Gender Lens — April 2018</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens_December%2018.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens_December%2018.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Gender Lens — December 2018</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens_March%2019.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Gender%20Lens_March%2019.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Gender Lens — March 2019</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/ODHIKAR_%20project%20brief.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/ODHIKAR_%20project%20brief.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">ODHIKAR Project Brief</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Youth%20Talk%202022.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/Youth%20Talk%202022.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Youth Talk 2022</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/YouthTalk%202021_e-version.pdf" target="_blank" class="work-card" data-group="creative" data-category="design">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <canvas class="pdf-thumb" data-src="Work/Creative%20work/2.%20Graphic%20Design%20/Publication/YouthTalk%202021_e-version.pdf" style="width:100%; display:block;"></canvas>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Graphic Design</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">YouthTalk 2021 — E-Version</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Open PDF →</span>
+      </div>
+    </a>
+
+    <!-- ── CREATIVE > SIMPLE ANIMATION ── -->
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Simple%20animation/Educo%20Logo-Simple-CC%20Sweep.mp4" target="_blank" class="work-card" data-group="creative" data-category="animation">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <video src="Work/Creative%20work/2.%20Graphic%20Design%20/Simple%20animation/Educo%20Logo-Simple-CC%20Sweep.mp4" muted preload="metadata" style="width:100%; height:100%; object-fit:cover; display:block;" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Simple Animation</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo Logo — CC Sweep</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Play video →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Simple%20animation/Educo%20logo-%20electric.mp4" target="_blank" class="work-card" data-group="creative" data-category="animation">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <video src="Work/Creative%20work/2.%20Graphic%20Design%20/Simple%20animation/Educo%20logo-%20electric.mp4" muted preload="metadata" style="width:100%; height:100%; object-fit:cover; display:block;" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Simple Animation</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Educo Logo — Electric</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Play video →</span>
+      </div>
+    </a>
+
+    <a href="Work/Creative%20work/2.%20Graphic%20Design%20/Simple%20animation/Intervida-Simple.mp4" target="_blank" class="work-card" data-group="creative" data-category="animation">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <video src="Work/Creative%20work/2.%20Graphic%20Design%20/Simple%20animation/Intervida-Simple.mp4" muted preload="metadata" style="width:100%; height:100%; object-fit:cover; display:block;" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">Simple Animation</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Intervida — Simple</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Play video →</span>
+      </div>
+    </a>
+   
+    <!-- ── CREATIVE > THE MOVING LENS (YouTube) ── -->
+    <a href="https://youtube.com/shorts/X5jkpF23fj0?feature=share" target="_blank" class="work-card" data-group="creative" data-category="video">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="https://img.youtube.com/vi/X5jkpF23fj0/hqdefault.jpg" alt="A Memory of Love" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">The Moving Lens</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">A Memory of Love</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Watch on YouTube →</span>
+      </div>
+    </a>
+
+    <a href="https://youtube.com/shorts/fFr83qqdo8c?feature=share" target="_blank" class="work-card" data-group="creative" data-category="video">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="https://img.youtube.com/vi/fFr83qqdo8c/hqdefault.jpg" alt="Magnificent Sreemangal" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">The Moving Lens</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Magnificent Sreemangal</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Watch on YouTube →</span>
+      </div>
+    </a>
+
+    <a href="https://youtu.be/gQ0nQQY8MNk" target="_blank" class="work-card" data-group="creative" data-category="video">
+      <div class="work-card-thumb" style="aspect-ratio:4/3; background:var(--accent-light); overflow:hidden;">
+        <img src="https://img.youtube.com/vi/gQ0nQQY8MNk/hqdefault.jpg" alt="Proud to be Emo" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease;">
+      </div>
+      <div class="work-card-body" style="padding:1.25rem 1.5rem;">
+        <span style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);">The Moving Lens</span>
+        <h3 style="font-family:var(--serif); font-size:1.1rem; font-weight:400; color:var(--ink); margin-top:0.4rem;">Proud to be Emo</h3>
+        <span style="font-size:0.78rem; color:var(--accent); display:block; margin-top:0.5rem;">Watch on YouTube →</span>
       </div>
     </a>
 
   </div>
-</section> 
-
-<!-- CTA BANNER -->
-<section class="cta-banner" id="contact">
-  <h2>Let's work together</h2>
-  <p>Looking for someone who can bring your vision to life? I'd love to hear about your project.</p>
-  <a href="mailto:mssadiakarim@hotmail.com" class="btn btn-light">Get in Touch</a>
 </section>
 
+<script>
+  const categoryDescriptions = {
+    strategy: "Designing and implementing strategic communication initiatives that translate complex ideas into measurable, impactful results.",
+    knowledge: "Contributing to high-quality, clear, and consistent publications by editing, coordinating, and managing content from draft to final production.",
+    photo: "Documentary and editorial photography that captures moments of resilience, joy, and transformation.",
+    design: "Publications, annual reports, campaigns, infographics, and branded materials that inform and inspire action.",
+    animation: "Logo animations and motion graphics that bring brand identities to life.",
+    video: "Short films and documentary video production using Adobe Premiere Pro and DaVinci Resolve."
+  };
+
+  const subMenus = {
+    comm: [
+      { name: "Planning & Strategy", value: "strategy" },
+      { name: "Knowledge Resources", value: "knowledge" }
+    ],
+    creative: [
+      { name: "Photography", value: "photo" },
+      { name: "Graphic Design", value: "design" },
+      { name: "Simple Animation", value: "animation" },
+      { name: "The Moving Lens", value: "video" }
+    ]
+  };
+
+  function renderPDFThumbs() {
+    document.querySelectorAll('canvas.pdf-thumb:not([data-rendered])').forEach(canvas => {
+      const card = canvas.closest('.work-card');
+      if (!card || card.style.display === 'none') return;
+      const src = canvas.dataset.src;
+      if (!src) return;
+      canvas.dataset.rendered = '1';
+      pdfjsLib.getDocument(src).promise.then(pdf => {
+        pdf.getPage(1).then(page => {
+          const container = canvas.parentElement;
+          const w = container.offsetWidth || 400;
+          const viewport = page.getViewport({ scale: 1 });
+          const scale = w / viewport.width;
+          const scaled = page.getViewport({ scale });
+          canvas.width = scaled.width;
+          canvas.height = scaled.height;
+          canvas.style.width = '100%';
+          canvas.style.height = '100%';
+          canvas.style.objectFit = 'cover';
+          page.render({ canvasContext: canvas.getContext('2d'), viewport: scaled });
+        });
+      }).catch(() => {
+        const p = canvas.parentElement;
+        p.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--ink-soft);font-size:0.8rem;padding:1rem;text-align:center;">Preview unavailable</div>';
+      });
+    });
+  }
+
+  function filterCards(group, category) {
+    document.querySelectorAll('.work-card').forEach(card => {
+      const matchGroup = group === 'all' || card.dataset.group === group;
+      const matchCategory = category === 'all' || card.dataset.category === category;
+      card.style.display = (matchGroup && matchCategory) ? 'block' : 'none';
+    });
+    const desc = document.getElementById('categoryDesc');
+    desc.textContent = category !== 'all' ? (categoryDescriptions[category] || '') : '';
+    setTimeout(renderPDFThumbs, 100);
+  }
+
+  function buildSubMenu(group) {
+    const subMenu = document.getElementById('subMenu');
+    subMenu.innerHTML = '';
+    if (!subMenus[group]) return;
+    subMenus[group].forEach((item, i) => {
+      const b = document.createElement('button');
+      b.classList.add('sub-btn');
+      if (i === 0) b.classList.add('active');
+      b.textContent = item.name;
+      b.dataset.filter = item.value;
+      subMenu.appendChild(b);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // Remove "All Work" button entirely
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      if (btn.dataset.group === 'all') btn.remove();
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.filter-btn.active').classList.remove('active');
+        btn.classList.add('active');
+        const group = btn.dataset.group;
+        buildSubMenu(group);
+        filterCards(group, subMenus[group][0].value);
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('sub-btn')) {
+        document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        const group = document.querySelector('.filter-btn.active').dataset.group;
+        filterCards(group, e.target.dataset.filter);
+      }
+    });
+
+    buildSubMenu('comm');
+    filterCards('comm', 'strategy');
+  });
+</script>
+
+<!-- CTA BANNER -->
+<section class="cta-banner" id="contact-banner">
+  <h2>Let's work together</h2>
+  <p>Looking for someone who can bring your vision to life? I'd love to hear about your project.</p>
+  <a href="#contact" class="btn btn-light" onclick="showContact()">Get in Touch</a>
+</section>
+
+<!-- CONTACT PAGE -->
+<section id="contact" style="display:none; background: var(--warm-white); padding: 6rem 4rem;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+
+    <p class="section-label">Contact</p>
+    <h2 style="font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; color: var(--ink); margin-bottom: 1.5rem; max-width: 100%;">Let's work together</h2>
+    <p style="font-size: 1rem; color: var(--ink-soft); line-height: 1.8; max-width: 55ch; margin-bottom: 4rem;">
+      Interested in working together to elevate your brand and message? Let's turn ideas, programmes, and initiatives into stories that inform, inspire, and create lasting impact.
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 2.5rem; max-width: 700px;">
+
+      <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <p style="font-family: var(--serif); font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;">Email</p>
+        <a href="mailto:mssadiakarim@hotmail.com" style="color: var(--accent); text-decoration: none; font-size: 1rem;">mssadiakarim@hotmail.com</a>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <p style="font-family: var(--serif); font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;">Location</p>
+        <p style="color: var(--ink-mid); font-size: 1rem;">Walsall, United Kingdom</p>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <p style="font-family: var(--serif); font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;">Connect</p>
+        <a href="https://www.linkedin.com/in/sadia-karim/" target="_blank" style="color: var(--ink-mid); text-decoration: none; font-size: 1rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-mid)'">LinkedIn ↗</a>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+ 
+
+ 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -1012,7 +1651,7 @@
       <p>
         <a href="mailto:mssadiakarim@hotmail.com" style="color: var(--ink-mid); text-decoration: none;">mssadiakarim@hotmail.com</a><br>
         <a href="https://www.linkedin.com/in/sadia-karim/" style="color: var(--accent); text-decoration: none; font-size: 0.875rem; margin-top: 0.5rem; display: inline-block;">LinkedIn ↗</a><br><br>
-        Your City, Country
+        Walsall, United Kingdom
       </p>
     </div>
   </div>
